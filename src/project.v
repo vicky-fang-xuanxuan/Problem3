@@ -25,3 +25,30 @@ module tt_um_example (
   wire _unused = &{ena, clk, rst_n, 1'b0};
 
 endmodule
+
+module comparator_8bit (
+    input  wire [7:0] ui_in,    // Dedicated inputs (A and B combined)
+    output wire [7:0] uo_out,   // Dedicated outputs (C)
+    input  wire [7:0] uio_in,   // IOs: Input path (not used)
+    output wire [7:0] uio_out,  // IOs: Output path (not used)
+    output wire [7:0] uio_oe,   // IOs: Enable path (not used)
+    input  wire       ena,      // Always 1 when the design is powered (ignored)
+    input  wire       clk,      // Clock (ignored for combinational logic)
+    input  wire       rst_n     // Reset (ignored for combinational logic)
+);
+
+  // Extract A and B from the 8-bit input (assuming lower 8 bits are A, upper 8 bits are B)
+  wire [7:0] A = ui_in;
+  wire [7:0] B = uio_in;
+
+  // Comparator Logic: If A < B, C[0] = 1; otherwise, C[0] = 0
+  assign uo_out = (A < B) ? 8'b00000001 : 8'b00000000; 
+
+  // Unused outputs set to zero
+  assign uio_out = 8'b00000000;
+  assign uio_oe  = 8'b00000000;
+
+  // Prevent warnings for unused inputs
+  wire _unused = &{ena, clk, rst_n, 1'b0};
+
+endmodule
